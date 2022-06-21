@@ -9,7 +9,7 @@ class RetrofitInstance {
 
     companion object {
         @SuppressLint("AuthLeak")
-        private const val BASE_URL = "http://10.0.2.2:5000/"
+        private const val BASE_URL = "http://129.154.55.103:5000/"
         var retrofit: Retrofit =
             Retrofit
                 .Builder()
