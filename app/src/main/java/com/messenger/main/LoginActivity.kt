@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.messenger.main.databinding.ActivityLoginBinding
 import com.messenger.main.dto.UserDto
+import com.messenger.main.pref.PreferenceApplication
 import com.messenger.main.retrofit.RetrofitInstance
 import com.messenger.main.service.AuthService
 import retrofit2.Call
@@ -34,6 +35,9 @@ class LoginActivity : AppCompatActivity() {
             call.enqueue(object : Callback<UserDto> {
                 override fun onResponse(call: Call<UserDto>, response: Response<UserDto>) {
                     if(response.code() == 200) {
+
+                        PreferenceApplication.prefs.user = id
+
                         val i = Intent(
                             this@LoginActivity,
                             MainActivity::class.java
