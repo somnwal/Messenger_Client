@@ -1,41 +1,40 @@
 package com.messenger.main
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import com.messenger.main.databinding.ActivityLoginBinding
+import com.messenger.main.databinding.ActivityRegisterBinding
 import com.messenger.main.pref.PreferenceApplication
 import com.messenger.main.retrofit.RetrofitInstance
 import com.messenger.main.service.AuthService
+import com.messenger.main.service.UserService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-class LoginActivity : AppCompatActivity() {
+class RegisterActivity : AppCompatActivity() {
+
     private var disposable: Disposable? = null
-    private val authService = RetrofitInstance.retrofit.create(AuthService::class.java)
-    private lateinit var binding: ActivityLoginBinding
+    private lateinit var binding: ActivityRegisterBinding
+    private var userService = RetrofitInstance.retrofit.create(UserService::class.java)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityLoginBinding.inflate(layoutInflater)
+        binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.buttonLogin.setOnClickListener {
-            val map = mapOf(
+        binding.buttonRegister.setOnClickListener {
+            val map = mapOf<String, String>(
                 "id" to binding.editTextID.text.toString(),
                 "password" to binding.editTextPassword.text.toString(),
-                "token" to PreferenceApplication.prefs.token
+                "name" to binding.editTextName.text.toString()
             )
 
-            login(map)
-        }
-
-        binding.buttonRegister.setOnClickListener {
-            val i = Intent(this@LoginActivity, RegisterActivity::class.java)
-            startActivity(i)
+            register(map)
         }
     }
 
@@ -44,30 +43,33 @@ class LoginActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    private fun login(map: Map<String, String>) {
+    private fun register(map: Map<String, String>) {
         // 로그인 실행
-        disposable = authService.login(map)
+        disposable = userService.register(map)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe({
-                PreferenceApplication.prefs.user = map["id"].toString()
-
-                val i = Intent(
-                    this@LoginActivity,
-                    MainActivity::class.java
-                )
-                startActivity(i)
-                finish()
-            }, {
                 AlertDialog
-                    .Builder(this@LoginActivity)
+                    .Builder(this@RegisterActivity)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle("알림")
-                    .setMessage("아이디 혹은 비밀번호가 일치하지 않습니다.")
+                    .setMessage("회원가입이 완료되었습니다.")
+                    .setPositiveButton("확인") { _: DialogInterface, _: Int ->
+                        finish()
+                    }
+                    .show()
+
+            }, {
+                AlertDialog
+                    .Builder(this@RegisterActivity)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("알림")
+                    .setMessage("입력한 값에 오류가 있거나 중복된 아이디 혹은 닉네임이 있습니다.")
                     .setPositiveButton("확인", null)
                     .show()
             }, {
 
             })
     }
+
 }

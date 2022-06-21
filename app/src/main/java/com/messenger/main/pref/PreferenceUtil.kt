@@ -9,15 +9,15 @@ class PreferenceUtil(context: Context) {
     private val prefs: SharedPreferences =
         context.getSharedPreferences(prefsFilename, Context.MODE_PRIVATE)
 
-    var user: String?
-        get() = prefs.getString("user", "")
+    var user: String
+        get() = prefs.getString("user", "") ?: ""
         set(value) = prefs.edit().putString("user", value).apply()
 
-    var token: String?
-        get() = prefs.getString("token", "")
+    var token: String
+        get() = prefs.getString("token", "") ?: ""
         set(value) = prefs.edit().putString("token", value).apply()
 
     fun remove(key: String) {
-        prefs.edit().remove(key).apply()
+        prefs.edit().putString(key, null).apply()
     }
 }

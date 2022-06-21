@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".pref.PreferenceApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -15,8 +16,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Messenger"
         android:usesCleartextTraffic="true"
-        android:name="com.messenger.main.pref.PreferenceApplication"
         tools:targetApi="31">
+        <activity
+            android:name=".MessageActivtiy"
+            android:exported="false" />
+
+        <service
+            android:name=".push.PushService"
+            android:enabled="true"
+            android:exported="true">
+
+            <!-- FCM과 관련.. 시스템에서 실행 시킬 수 있게 -->
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
         <activity
             android:name=".LoginActivity"
             android:exported="false" />

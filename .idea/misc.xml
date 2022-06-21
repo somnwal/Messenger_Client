@@ -4,6 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/# Github/Messenger_Client/app/src/main/res/layout/activity_login.xml" value="0.18854166666666666" />
+        <entry key="..\:/# Github/Messenger_Client/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/# Github/Messenger_Client/app/src/main/res/layout/activity_message.xml" value="0.11322188449848024" />
+        <entry key="..\:/# Github/Messenger_Client/app/src/main/res/layout/activity_register.xml" value="0.17980072463768115" />
+        <entry key="..\:/# Github/Messenger_Client/app/src/main/res/layout/recycler_chatroom.xml" value="0.33" />
+        <entry key="..\:/# Github/Messenger_Client/app/src/main/res/menu/main_menu.xml" value="0.18385416666666668" />
         <entry key="..\:/# Github/Messenger_Client/app/src/main/res/xml/network_security_config.xml" value="0.1" />
         <entry key="..\:/AndroidProject/Messenger/app/src/main/res/layout/activity_loading.xml" value="0.17857142857142858" />
         <entry key="..\:/AndroidProject/Messenger/app/src/main/res/layout/activity_main.xml" value="0.17857142857142858" />

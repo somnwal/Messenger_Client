@@ -1,8 +1,8 @@
-package com.messenger.main.dto
+package com.messenger.main.entity
 
 import com.google.gson.annotations.SerializedName
 
-data class UserDto(
+data class User(
     @SerializedName("id")
     val id: String,
 
