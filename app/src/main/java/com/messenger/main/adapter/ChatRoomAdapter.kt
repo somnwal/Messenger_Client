@@ -19,7 +19,7 @@ import com.messenger.main.entity.ChatRoom
 class ChatRoomViewHolder(val binding: RecyclerChatroomBinding) : RecyclerView.ViewHolder(binding.root)
 
 // Adapter 구성
-class ChatRoomAdapter(val datas: MutableList<ChatRoom>) :
+class ChatRoomAdapter(val datas: MutableList<ChatRoom>, val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     // 각 항목의 뷰 홀더를 준비해서 리턴, 자동으로 재사용.
@@ -40,6 +40,13 @@ class ChatRoomAdapter(val datas: MutableList<ChatRoom>) :
         binding.textContent.text = datas[position].lastMessage
         binding.textDate.text = datas[position].date.replace("T", " ")
 
+        binding.root.setOnClickListener {
+            var i = Intent(context, MessageActivtiy::class.java)
+            i.putExtra("to_user", datas[position].toUser)
+            i.putExtra("to_user_name", datas[position].toUserName)
+
+            context.startActivity(i)
+        }
     }
 
     override fun getItemCount(): Int {

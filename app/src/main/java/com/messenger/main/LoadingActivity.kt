@@ -22,6 +22,8 @@ class LoadingActivity : AppCompatActivity() {
 
                     //Log.d("test", "[$user]" ?: "0")
 
+                    sleep(1000)
+
                     if (user.isEmpty()) {
                         val i = Intent(
                             this@LoadingActivity,

@@ -35,8 +35,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.editTextInfo.text = "${PreferenceApplication.prefs.user} 님 환영합니다."
         getChatRoomList(PreferenceApplication.prefs.user)
 
+        binding.buttonNewChat.setOnClickListener {
+            var i = Intent(this@MainActivity, MessageActivtiy::class.java)
+            startActivity(i)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -87,22 +92,7 @@ class MainActivity : AppCompatActivity() {
                 // adapter 설정
                 val layoutManager = LinearLayoutManager(this@MainActivity)
                 binding.chatRoomView.layoutManager = layoutManager
-
-                binding.chatRoomView.adapter = ChatRoomAdapter(chatRoomList)
-                binding.chatRoomView.addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
-                    override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
-                        TODO("Not yet implemented")
-                    }
-
-                    override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
-
-                    }
-
-                    override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
-                        TODO("Not yet implemented")
-                    }
-
-                })
+                binding.chatRoomView.adapter = ChatRoomAdapter(chatRoomList, this@MainActivity)
             })
 
 
