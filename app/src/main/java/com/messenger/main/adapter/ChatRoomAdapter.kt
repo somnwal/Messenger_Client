@@ -52,7 +52,4 @@ class ChatRoomAdapter(val datas: MutableList<ChatRoom>, val context: Context) :
     override fun getItemCount(): Int {
         return datas.size
     }
-
-
-
 }

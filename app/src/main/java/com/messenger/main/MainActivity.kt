@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.messenger.main.adapter.ChatRoomAdapter
@@ -19,6 +20,7 @@ import com.messenger.main.service.ChatRoomService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -27,7 +29,9 @@ class MainActivity : AppCompatActivity() {
     private val chatRoomService = RetrofitInstance.retrofit.create(ChatRoomService::class.java)
     var disposable: Disposable? = null
 
-    private lateinit var chatRoomList: MutableList<ChatRoom>
+    private var chatRoomList = mutableListOf<ChatRoom>()
+
+    private lateinit var chatRoomCoroutine: Job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +40,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.editTextInfo.text = "${PreferenceApplication.prefs.user} 님 환영합니다."
+
+        val layoutManager = LinearLayoutManager(this@MainActivity)
+        binding.chatRoomView.layoutManager = layoutManager
+        binding.chatRoomView.adapter = ChatRoomAdapter(chatRoomList, this@MainActivity)
+
         getChatRoomList(PreferenceApplication.prefs.user)
 
         binding.buttonNewChat.setOnClickListener {
             var i = Intent(this@MainActivity, MessageActivtiy::class.java)
             startActivity(i)
+        }
+
+        chatRoomCoroutine = CoroutineScope(Dispatchers.Default + Job()).launch {
+            while (true) {
+                Log.d("chatroom",chatRoomList.toString())
+                getChatRoomList(PreferenceApplication.prefs.user)
+                delay(500)
+            }
         }
     }
 
@@ -67,33 +84,38 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         disposable?.let { disposable!!.dispose() }
+        chatRoomCoroutine.cancel()
+
         super.onDestroy()
     }
 
     private fun getChatRoomList(fromUser: String) {
-
         val map = mapOf(
             "from_user" to fromUser
         )
-
-        Log.d("chatroom", "!!")
 
         disposable = chatRoomService.getAll(map)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe({
-                chatRoomList = it
-
-                chatRoomList.forEach{ i -> Log.d("chatroom", "$i")}
+                if (it.isNotEmpty() && chatRoomList != it) {
+                    updateChatRoom(it)
+                }
             }, {
-                chatRoomList = mutableListOf()
                 Log.e("error_custom", it.message ?: "")
             }, {
-                // adapter 설정
-                val layoutManager = LinearLayoutManager(this@MainActivity)
-                binding.chatRoomView.layoutManager = layoutManager
-                binding.chatRoomView.adapter = ChatRoomAdapter(chatRoomList, this@MainActivity)
             })
+    }
+
+    private fun updateChatRoom(list: MutableList<ChatRoom>) {
+        if (chatRoomList.isEmpty()) {
+            chatRoomList = list
+            binding.chatRoomView.adapter = ChatRoomAdapter(chatRoomList, this@MainActivity)
+        } else {
+            val size = chatRoomList.size
+            chatRoomList = list
+            binding.chatRoomView.adapter?.notifyDataSetChanged()
+        }
 
 
     }

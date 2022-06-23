@@ -1,16 +1,11 @@
 package com.messenger.main
 
-import android.content.DialogInterface
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.messenger.main.adapter.ChatRoomAdapter
 import com.messenger.main.adapter.MessageAdapter
 import com.messenger.main.databinding.ActivityMessageBinding
-import com.messenger.main.entity.ChatRoom
 import com.messenger.main.entity.Message
 import com.messenger.main.pref.PreferenceApplication
 import com.messenger.main.retrofit.RetrofitInstance
@@ -19,6 +14,7 @@ import com.messenger.main.service.UserService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.*
 
 class MessageActivtiy : AppCompatActivity() {
 
@@ -30,8 +26,10 @@ class MessageActivtiy : AppCompatActivity() {
     private lateinit var toUser: String
     private lateinit var toUserName: String
 
-    private lateinit var messageList: MutableList<Message>
+    private var messageList = mutableListOf<Message>()
     private var lastDate = ""
+
+    private lateinit var messageCoroutine: Job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,19 +40,45 @@ class MessageActivtiy : AppCompatActivity() {
         toUser = intent.getStringExtra("to_user").toString()
         toUserName = intent.getStringExtra("to_user_name").toString()
 
+        title = "$toUserName 님과의 대화"
+
+        // adapter 설정
+        val layoutManager = LinearLayoutManager(this@MessageActivtiy)
+        binding.messageView.layoutManager = layoutManager
+        binding.messageView.adapter =
+            MessageAdapter(messageList, this@MessageActivtiy, toUserName)
+
+        // 초기 메시지 불러오기
         getMessages(lastDate)
 
+        // 전송 버튼 눌렀을 때
         binding.buttonSend.setOnClickListener {
-            sendMessage()
-            binding.editTextMessage.text.clear()
+            if (binding.editTextMessage.text.isNotEmpty()) {
+                sendMessage()
+                binding.editTextMessage.text.clear()
+            }
         }
 
+        // 0.5초마다 메시지 불러오기
+        messageCoroutine = CoroutineScope(Dispatchers.Default + Job()).launch {
+            while (true) {
+                delay(500)
+                Log.d("message", "lastDate: $lastDate")
+                getMessages(lastDate)
+            }
+        }
 
+    }
+
+    override fun onDestroy() {
+        messageCoroutine.cancel()
+
+        super.onDestroy()
     }
 
     private fun getMessages(date: String) {
 
-        var map: Map<String, String> = if(date.isEmpty()) {
+        var map: Map<String, String> = if (date.isEmpty()) {
             mapOf(
                 "from_user" to PreferenceApplication.prefs.user,
                 "to_user" to toUser
@@ -71,18 +95,14 @@ class MessageActivtiy : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe({
-                messageList = it
+                if(it.isNotEmpty()) {
+                    addToMessageList(it)
+                    binding.messageView.scrollToPosition(messageList.size - 1)
+                }
             }, {
-                messageList = mutableListOf()
                 Log.e("error", "${it.message}")
             }, {
-                // adapter 설정
-                val layoutManager = LinearLayoutManager(this@MessageActivtiy)
-                binding.messageView.layoutManager = layoutManager
-                binding.messageView.adapter = MessageAdapter(messageList, this@MessageActivtiy, toUserName)
-                binding.messageView.scrollToPosition(messageList.size - 1)
 
-                lastDate = messageList.last().date
             })
     }
 
@@ -110,5 +130,6 @@ class MessageActivtiy : AppCompatActivity() {
         }
 
         lastDate = messageList.last().date
+        binding.messageView.adapter?.notifyItemChanged(0)
     }
 }
