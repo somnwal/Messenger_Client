@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="20dp"
+    android:paddingHorizontal="5dp"
     android:paddingVertical="10dp">
 
     <TextView
@@ -16,30 +16,53 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textToUserContent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/toUserContentView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="메시지 22222222222222222222222222"
-        android:textSize="18sp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/to_user_chat"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="5dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textToUserName" />
+        app:layout_constraintTop_toBottomOf="@id/textToUserName">
+
+        <TextView
+            android:id="@+id/textToUserContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:text="메시지222222222222222222222222222222222222222222222"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <TextView
         android:id="@+id/textToUserDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="3dp"
         android:ellipsize="end"
         android:maxLength="16"
         android:maxLines="1"
         android:text="2022-12-31T00:00:00"
-        android:textSize="15sp"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textToUserContent" />
+        app:layout_constraintTop_toBottomOf="@id/toUserContentView" />
+
+
+    <!--
+    ============================================
+
+    내 메시지 템플릿
+
+    ============================================
+    -->
 
     <TextView
         android:id="@+id/textFromUserName"
@@ -51,30 +74,43 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textFromUserContent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/fromUserContentView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="메시지 22222222222222222222222222"
-        android:textSize="18sp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/from_user_chat"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="5dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textFromUserName" />
+        app:layout_constraintTop_toBottomOf="@id/textFromUserName">
+
+        <TextView
+            android:id="@+id/textFromUserContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:text="메시지222222222222222222222222222222222222222222222222"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/textFromUserDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:maxLength="16"
         android:maxLines="1"
         android:text="2022-12-31T00:00:00"
-        android:textSize="15sp"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textFromUserContent" />
+        app:layout_constraintTop_toBottomOf="@id/fromUserContentView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

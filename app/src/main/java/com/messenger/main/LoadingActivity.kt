@@ -3,7 +3,6 @@ package com.messenger.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import com.messenger.main.pref.PreferenceApplication
 
 class LoadingActivity : AppCompatActivity() {
@@ -34,7 +33,7 @@ class LoadingActivity : AppCompatActivity() {
                     } else {
                         val i = Intent(
                             this@LoadingActivity,
-                            MainActivity::class.java
+                            ChatRoomActivity::class.java
 
                         )
                         startActivity(i)

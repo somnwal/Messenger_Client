@@ -3,6 +3,7 @@ package com.messenger.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import com.messenger.main.databinding.ActivityLoginBinding
 import com.messenger.main.pref.PreferenceApplication
@@ -46,16 +47,20 @@ class LoginActivity : AppCompatActivity() {
 
     private fun login(map: Map<String, String>) {
         // 로그인 실행
+        Log.d("test", map.toString())
+
         disposable = authService.login(map)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe({
-                PreferenceApplication.prefs.user = map["id"].toString()
+                PreferenceApplication.prefs.user = it.id
+                PreferenceApplication.prefs.userName = it.name
 
                 val i = Intent(
                     this@LoginActivity,
-                    MainActivity::class.java
+                    ChatRoomActivity::class.java
                 )
+
                 startActivity(i)
                 finish()
             }, {

@@ -4,14 +4,14 @@ import com.google.gson.annotations.SerializedName
 
 data class Message (
     @SerializedName("from_user")
-    val fromUser: String,
+    var fromUser: String,
 
     @SerializedName("to_user")
-    val toUser: String,
+    var toUser: String,
 
     @SerializedName("msg")
-    val msg: String,
+    var msg: String,
 
     @SerializedName("date")
-    val date: String
+    var date: String
 )

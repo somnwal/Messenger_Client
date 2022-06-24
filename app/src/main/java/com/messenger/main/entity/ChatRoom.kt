@@ -4,20 +4,20 @@ import com.google.gson.annotations.SerializedName
 
 data class ChatRoom(
     @SerializedName("from_user")
-    val fromUser: String,
+    var fromUser: String,
 
     @SerializedName("to_user")
-    val toUser: String,
+    var toUser: String,
 
     @SerializedName("from_user_name")
-    val fromUserName: String,
+    var fromUserName: String,
 
     @SerializedName("to_user_name")
-    val toUserName: String,
+    var toUserName: String,
 
     @SerializedName("date")
-    val date: String,
+    var date: String,
 
     @SerializedName("last_message")
-    val lastMessage: String
+    var lastMessage: String
 )

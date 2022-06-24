@@ -1,7 +1,9 @@
 package com.messenger.main
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.messenger.main.adapter.MessageAdapter
@@ -15,6 +17,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.*
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 class MessageActivtiy : AppCompatActivity() {
 
@@ -76,6 +82,7 @@ class MessageActivtiy : AppCompatActivity() {
         super.onDestroy()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun getMessages(date: String) {
 
         var map: Map<String, String> = if (date.isEmpty()) {
@@ -95,7 +102,7 @@ class MessageActivtiy : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe({
-                if(it.isNotEmpty()) {
+                if (it.isNotEmpty()) {
                     addToMessageList(it)
                     binding.messageView.scrollToPosition(messageList.size - 1)
                 }

@@ -39,12 +39,12 @@
             android:name=".LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ChatRoomActivity"
             android:exported="false" />
         <activity
             android:name=".LoadingActivity"
             android:exported="true"
-            android:theme="@style/Theme.Diary.NoActionBar" >
+            android:theme="@style/Theme.Diary.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
