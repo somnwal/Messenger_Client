@@ -59,7 +59,7 @@ class RegisterActivity : AppCompatActivity() {
             .subscribe({
                 Log.d("Response", it.toString())
 
-                if (it.errors.size > 0) {
+                if (it.errors != null && it.errors.size > 0) {
                     it.errors.forEach { e ->
                         when (e.msg) {
                             "ERR_ID" -> {
